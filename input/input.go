@@ -8,7 +8,7 @@ import (
 // repeatingKeyPressed return true when key is pressed considering the repeat state.
 func repeatingKeyPressed(key ebiten.Key) bool {
 	const (
-		delay    = 50
+		delay    = 5
 		interval = 1
 	)
 	d := inpututil.KeyPressDuration(key)

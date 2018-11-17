@@ -7,10 +7,10 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 
-	"github.com/Loowootoo/raycast1/input"
-	"github.com/Loowootoo/raycast1/tex"
+	"github.com/Loowootoo/raycasting/input"
+	"github.com/Loowootoo/raycasting/tex"
 
-	"github.com/Loowootoo/raycast1/vec3"
+	"github.com/Loowootoo/raycasting/vec3"
 )
 
 var worldMap = [24][24]int{
