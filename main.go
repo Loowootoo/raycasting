@@ -58,15 +58,15 @@ func NewFrame() *Frame {
 	fr := new(Frame)
 	buf := make([]byte, winWidth*winHeight*4)
 	fr.Buf = buf
-	fr.Texture[0] = tex.LoadFromFile("assets/461223101.png")
-	fr.Texture[1] = tex.LoadFromFile("assets/461223102.png")
-	fr.Texture[2] = tex.LoadFromFile("assets/461223103.png")
-	fr.Texture[3] = tex.LoadFromFile("assets/461223104.png")
-	fr.Texture[4] = tex.LoadFromFile("assets/461223105.png")
-	fr.Texture[5] = tex.LoadFromFile("assets/461223106.png")
-	fr.Texture[6] = tex.LoadFromFile("assets/461223107.png")
-	fr.Texture[7] = tex.LoadFromFile("assets/461223108.png")
-	fr.Texture[8] = tex.LoadFromFile("assets/461223109.png")
+	fr.Texture[0] = tex.LoadFromFile("assets/BGTile3.png")
+	fr.Texture[1] = tex.LoadFromFile("assets/BGTile4.png")
+	fr.Texture[2] = tex.LoadFromFile("assets/BGTile5.png")
+	fr.Texture[3] = tex.LoadFromFile("assets/BGTile6.png")
+	fr.Texture[4] = tex.LoadFromFile("assets/Box.png")
+	fr.Texture[5] = tex.LoadFromFile("assets/DoorLocked.png")
+	fr.Texture[6] = tex.LoadFromFile("assets/DoorOpen.png")
+	fr.Texture[7] = tex.LoadFromFile("assets/Acid2.png")
+	fr.Texture[8] = tex.LoadFromFile("assets/Tile5.png")
 	return fr
 }
 
@@ -230,22 +230,25 @@ func (rc *RayCasting) Gen() {
 			texX = texSize - texX - 1
 		}
 
-		texNum := worldMap[rc.MapX][rc.MapY]
+		texNum := worldMap[rc.MapX][rc.MapY] - 1
 		ww := winWidth * 4
 		st := (rc.ScrFrame.DrawStart*winWidth + x) * 4
 		for y := rc.ScrFrame.DrawStart; y < rc.ScrFrame.DrawEnd; y++ {
-			d := y*256 - winHeight*128 + rc.ScrFrame.LineHigh*128 //256 and 128 factors to avoid floats
+			//d := y*256 - winHeight*128 + rc.ScrFrame.LineHigh*128 //256 and 128 factors to avoid floats
+			d := (y << 8) - (winHeight << 7) + (rc.ScrFrame.LineHigh << 7)
 			// TODO: avoid the division to speed this up
 			texY := ((d * 64) / rc.ScrFrame.LineHigh) / 256
 			index := (64*texY + texX) * 4
 			rc.ScrFrame.Buf[st] = rc.ScrFrame.Texture[texNum].Pixels[index]
 			rc.ScrFrame.Buf[st+1] = rc.ScrFrame.Texture[texNum].Pixels[index+1]
 			rc.ScrFrame.Buf[st+2] = rc.ScrFrame.Texture[texNum].Pixels[index+2]
-			if rc.Side == 1 {
-				rc.ScrFrame.Buf[st+3] = rc.ScrFrame.Texture[texNum].Pixels[index+3] - 127
-			} else {
-				rc.ScrFrame.Buf[st+3] = rc.ScrFrame.Texture[texNum].Pixels[index+3]
-			}
+			//			if rc.Side == 1 {
+			//				rc.ScrFrame.Buf[st+3] = rc.ScrFrame.Texture[texNum].Pixels[index+3] - 127
+			//			} else {
+			cr := rc.ScrFrame.Texture[texNum].Pixels[index+3]
+			cr = byte(float64(cr) / rc.PrepWallDist)
+			rc.ScrFrame.Buf[st+3] = cr
+			//			}
 			st += ww
 		}
 		/////////////////////////////////////////////////////////////
@@ -279,10 +282,10 @@ func (rc *RayCasting) Gen() {
 			fx := int(currentFloor.X*float64(texSize)) % texSize
 			fy := int(currentFloor.Y*float64(texSize)) % texSize
 			idx := (fy*64 + fx) * 4
-			rc.ScrFrame.Buf[st] = rc.ScrFrame.Texture[3].Pixels[idx]
-			rc.ScrFrame.Buf[st+1] = rc.ScrFrame.Texture[3].Pixels[idx+1]
-			rc.ScrFrame.Buf[st+2] = rc.ScrFrame.Texture[3].Pixels[idx+2]
-			rc.ScrFrame.Buf[st+3] = rc.ScrFrame.Texture[3].Pixels[idx+3] - 127
+			rc.ScrFrame.Buf[st] = rc.ScrFrame.Texture[7].Pixels[idx]
+			rc.ScrFrame.Buf[st+1] = rc.ScrFrame.Texture[7].Pixels[idx+1]
+			rc.ScrFrame.Buf[st+2] = rc.ScrFrame.Texture[7].Pixels[idx+2]
+			rc.ScrFrame.Buf[st+3] = rc.ScrFrame.Texture[7].Pixels[idx+3] - 127
 			rc.ScrFrame.Buf[st1] = rc.ScrFrame.Texture[8].Pixels[idx]
 			rc.ScrFrame.Buf[st1+1] = rc.ScrFrame.Texture[8].Pixels[idx+1]
 			rc.ScrFrame.Buf[st1+2] = rc.ScrFrame.Texture[8].Pixels[idx+2]
