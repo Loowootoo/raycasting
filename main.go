@@ -7,10 +7,10 @@ import (
 	"github.com/hajimehoshi/ebiten"
 	"github.com/hajimehoshi/ebiten/ebitenutil"
 
-	"github.com/Loowootoo/raycasting/input"
-	"github.com/Loowootoo/raycasting/tex"
+	"raycasting/input"
+	"raycasting/tex"
 
-	"github.com/Loowootoo/raycasting/vec3"
+	"raycasting/vec3"
 )
 
 var worldMap = [24][24]int{
@@ -71,12 +71,12 @@ func NewFrame() *Frame {
 }
 
 type RayCasting struct {
-	Pos          vec3.Vector
-	Dir          vec3.Vector
-	CameraPlan   vec3.Vector
-	RayDir       vec3.Vector
-	SideDist     vec3.Vector
-	DeltaDist    vec3.Vector
+	Pos          vec3.Vec2
+	Dir          vec3.Vec2
+	CameraPlan   vec3.Vec2
+	RayDir       vec3.Vec2
+	SideDist     vec3.Vec2
+	DeltaDist    vec3.Vec2
 	PrepWallDist float64
 	CameraX      float64
 	MapX, MapY   int
@@ -252,7 +252,7 @@ func (rc *RayCasting) Gen() {
 			st += ww
 		}
 		/////////////////////////////////////////////////////////////
-		var floorWall vec3.Vector
+		var floorWall vec3.Vec2
 
 		if rc.Side == 0 && rc.RayDir.X > 0 {
 			floorWall.X = float64(rc.MapX)
@@ -273,7 +273,7 @@ func (rc *RayCasting) Gen() {
 		ww = winWidth * 4
 		st = ((rc.ScrFrame.DrawEnd+1)*winWidth + x) * 4
 		st1 := ((winHeight-rc.ScrFrame.DrawEnd+1)*winWidth + x) * 4
-		var currentFloor vec3.Vector
+		var currentFloor vec3.Vec2
 		for y := rc.ScrFrame.DrawEnd + 1; y < winHeight; y++ {
 			currentDist := float64(winHeight) / (2.0*float64(y) - float64(winHeight))
 			weight := (currentDist - distPlayer) / (distWall - distPlayer)
