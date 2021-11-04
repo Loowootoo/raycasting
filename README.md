@@ -8,4 +8,6 @@ use key W A S D move
 ### Useing ebiten game library**  
 <https://hajimehoshi.github.io/ebiten/>  
 
-只是用來回味 Raycasting ……  
+只是用來回味 Raycasting  
+
+it's only for fun .
