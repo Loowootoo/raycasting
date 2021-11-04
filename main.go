@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/hajimehoshi/ebiten"
-	"github.com/hajimehoshi/ebiten/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
-	"raycasting/input"
-	"raycasting/tex"
+	"github.com/Loowootoo/raycasting/input"
+	"github.com/Loowootoo/raycasting/tex"
 
-	"raycasting/vec3"
+	"github.com/Loowootoo/raycasting/vec3"
 )
+
+type Game struct{}
 
 var worldMap = [24][24]int{
 	{4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7},
@@ -302,22 +304,27 @@ func (rc *RayCasting) Run() {
 	rc.GetInput()
 }
 
-func update(screen *ebiten.Image) error {
+func (g *Game) Update() error {
 	rayCasting.Run()
-	if ebiten.IsDrawingSkipped() {
-		return nil
-	}
+	return nil
+}
+func (g *Game) Draw(screen *ebiten.Image) {
 	screen.ReplacePixels(rayCasting.ScrFrame.Buf)
 	ebitenutil.DebugPrint(screen, fmt.Sprintf("TPS: %0.2f", ebiten.CurrentTPS()))
-	return nil
+
+}
+func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
+	return winWidth, winHeight
 }
 
 var rayCasting *RayCasting
 
 func main() {
 	rayCasting = NewRacCasting()
-	err := ebiten.Run(update, winWidth, winHeight, 1, "Raycasting")
-	if err != nil {
+	ebiten.SetWindowSize(winWidth, winHeight)
+	ebiten.SetWindowTitle("Raycasting !")
+
+	if err := ebiten.RunGame(&Game{}); err != nil {
 		panic(err)
 	}
 }
